@@ -22,70 +22,69 @@ async function run() {
         console.log("Connected to MongoDB");
 
         const db = client.db('Programming-Hero');
-        // const collection = db.collection('users');
+        const usersCollection = db.collection('users');
 
         
 
         // ==============================================================
         // WRITE YOUR CODE HERE
-        // //create flash sale
-        // app.post("/flash-sale", async(req, res) =>{
-        //     const newFlashSale = req.body;
-        //     const result = await flashSalesCollection.insertOne(newFlashSale)
-        //     res.status(201).json({
-        //         success: true,
-        //         message: 'New Flash sale Added successfully!',
-        //         data: result
-        //     });
-        // })
+        //post users info
+        app.post("/api/user", async(req, res) =>{
+            const newUser = req.body;
+            const result = await usersCollection.insertOne(newUser)
+            res.status(201).json({
+                success: true,
+                message: 'New User Added successfully!',
+                data: result
+            });
+        })
 
+        //get all users
+        app.get("/api/users", async(req, res) =>{
+            const result = await usersCollection.find().toArray()
+            res.status(201).json({
+                success: true,
+                message: 'Users Info are retrieved successfully!',
+                data: result
+            });
+        })
 
-        // //create Category
-        // app.post("/category", async(req, res) =>{
-        //     const newCategory = req.body;
-        //     const result = await categoriesCollection.insertOne(newCategory)
-        //     res.status(201).json({
-        //         success: true,
-        //         message: 'New Category Added successfully!',
-        //         data: result
-        //     });
-        // })
+        //delete a supply
+        app.delete("/api/user/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await usersCollection.deleteOne(query);
+            res.status(201).json({
+                success: true,
+                message: 'User is deleted successfully!',
+                data: result
+            });
+           });
 
-        // //get all flash sale
-        // app.get("/categories", async(req, res) =>{
-        //     const result = await categoriesCollection.find().toArray()
-        //     res.status(201).json({
-        //         success: true,
-        //         message: 'Category are retrieved successfully!',
-        //         data: result
-        //     });
-        // })
+           //update a supply
+          app.put("/api/user/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const update = { $set: req.body };
+            const result = await usersCollection.findOneAndUpdate(query, update, { returnOriginal: false });
+            res.status(201).json({
+                success: true,
+                message: 'User is updated successfully!',
+                data: result
+            });
+           });
 
-       
-
-        // //get all products for popular products
-        // app.get("/products", async(req, res) =>{
-        //     const result = await productsCollection.find().sort({ ratings: -1 }).toArray();
-        //     res.status(201).json({
-        //         success: true,
-        //         message: 'Products are retrieved successfully!',
-        //         data: result
-        //     });
-        // })
-          
-          
-
-        // //get single product
-        // app.get("/single-fish/:id", async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: new ObjectId(id) };
-        //     const result = await productsCollection.findOne(query);
-        //     res.status(201).json({
-        //         success: true,
-        //         message: 'Product is retrieved successfully!',
-        //         data: result
-        //     });
-        // });
+        //get single product
+        app.get("/api/user/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await usersCollection.findOne(query);
+            res.status(201).json({
+                success: true,
+                message: 'User is retrieved successfully!',
+                data: result
+            });
+        });
 
         
             
