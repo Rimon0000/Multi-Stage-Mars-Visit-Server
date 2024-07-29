@@ -86,6 +86,29 @@ async function run() {
             });
         });
 
+        //total number of health issues or not
+        app.get("/api/users/health", async(req, res) =>{
+            const trueCount = await usersCollection.countDocuments({ isHealthDeclaration: true });
+            const falseCount = await usersCollection.countDocuments({ isHealthDeclaration: false });
+            res.status(201).json({
+                success: true,
+                message: 'Health Info are retrieved successfully!',
+                trueCount,
+                falseCount
+            });
+        })
+
+        // get last inserted user
+        app.get("/api/lastUser", async (req, res) => {
+            const result = await usersCollection.find().sort({ _id: -1 }).limit(1).toArray();
+            res.status(200).json({
+              success: true,
+              message: 'Last inserted user retrieved successfully!',
+              data: result[0]
+            });
+            });
+  
+      
         
             
 
